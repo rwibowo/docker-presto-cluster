@@ -2,7 +2,7 @@
 # This docker image is for launching test purpose presto cluster.
 #
 
-FROM openjdk:8-slim
+FROM openjdk:11-slim
 LABEL maintainer="lewuathe"
 
 ARG VERSION
@@ -12,7 +12,7 @@ ENV BASE_URL=https://repo1.maven.org/maven2
 
 # install dev tools
 RUN apt-get update
-RUN apt-get install -y curl tar sudo rsync python wget python-pip python-dev build-essential
+RUN apt-get install -y curl tar sudo rsync python wget python-pip python-dev build-essential uuid
 RUN pip install jinja2
 
 # java
@@ -31,6 +31,9 @@ WORKDIR /usr/local
 RUN wget -q ${BASE_URL}/io/prestosql/presto-server/${PRESTO_VERSION}/presto-server-${PRESTO_VERSION}.tar.gz
 RUN tar xvzf presto-server-${PRESTO_VERSION}.tar.gz -C /usr/local/
 RUN ln -s /usr/local/presto-server-${PRESTO_VERSION} $PRESTO_HOME
+
+# Delete presto installer file
+RUN rm presto-server-${PRESTO_VERSION}.tar.gz
 
 ADD scripts ${PRESTO_HOME}/scripts
 
